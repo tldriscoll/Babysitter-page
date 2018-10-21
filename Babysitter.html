@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2 align="center">Calculate Babysitters Daily Payment</h2>
+<h4 align="center">(Fields with a <b><font color="#ff0000">*</font></b> are required fields.)</h4>
+
+<table border="0" align="center">
+<tr>
+<td><b><font color="#ff000">*</font></b></td>
+<td><b>First Name</b></td>
+<td><input type="text" name="firstname" id="firstname" onfocus="javascript:ClearError();this.value=''"></td>
+</tr>
+
+<tr>
+<td><b><font color="#ff000">*</font></b></td>
+<td><b>Last Name</b></td>
+<td><input type="text" name="lastname" id="lastname" onfocus="javascript:ClearError();this.value=''"></td>
+</tr>
+</table>
+
+<h4 align="center">Enter time in full hours (no fractional hours)</h4>
+<h4 align="center">(Example: Start time: 5:00 End time: 12:00)</h4>
+
+<table border="0" align="center">
+<tr>
+<td><b><font color="#ff000">*</font></b></td>
+<td><b>Start time:</b></td>
+<td><input type="text" name="starttime" id="starttime" onfocus="javascript:ClearError();this.value=''"></td>
+</tr>
+
+<tr>
+<td><b><font color="#ff000">*</font></b></td>
+<td><b>End time:</b></td>
+<td><input type="text" name="endtime" id="endtime" onfocus="javascript:ClearError();this.value=''"></td>
+</tr>
+
+</table>
+<br/>
+<div style="text-align: center;">
+<button type="button"
+onclick="javascript:Validate()">
+Calculate payment</button>
+</div>
+
+<p align="center" id="amount"></p>
+<font color="#ff000"><p align="center" id="errormsg"></p></font>
+
+<script type="text/javascript">
+function Validate() {
+// Check for blank fields
+if(document.getElementById("firstname").value =='')
+{
+	document.getElementById('errormsg').innerHTML = "Firstname is required.";
+    return;
+}
+else if(document.getElementById("lastname").value =='')
+{
+	document.getElementById('errormsg').innerHTML = "Lastname is required.";
+    return;
+}
+else if(document.getElementById("starttime").value =='')
+{
+	document.getElementById('errormsg').innerHTML = "Start time is required.";
+    return;
+}
+else if(document.getElementById("endtime").value =='')
+{
+	document.getElementById('errormsg').innerHTML = "End time is required.";
+    return;
+}
+
+// Calculate amount due
+var amount = 0;
+var hours = 0;
+var bedtime= 9;
+var starttime = document.getElementById("starttime").value.split(":");
+var endtime = document.getElementById("endtime").value.split(":");
+
+// Check for correct starttime range
+if(!(starttime[0] >= 5 & starttime[0] <= 12))
+{
+	document.getElementById('errormsg').innerHTML = "Start time must be beween 5:00pm and 12:00am";
+    return;
+}
+
+// Check for correct endtime range
+if(endtime[0] == 5)
+{
+	document.getElementById('errormsg').innerHTML = "End time must be beween 6:00pm and 4:00am";
+    return;
+}
+
+// When endtime at bedtime or less
+if(endtime[0] <= bedtime) {
+	hours = endtime[0] - starttime[0];
+    amount = 12 * hours;
+}
+
+//When endtime is during bedtime before midnight
+if(endtime[0] > bedtime && endtime[0] <= 12) {
+	hours = endtime[0] - bedtime;
+    amount = 8 * hours;
+    amount = amount + (12 * (bedtime - starttime[0])) ;
+}
+
+// When endtime after midight
+if(endtime[0] <= 4) {
+	amount = 12 * (bedtime - starttime[0]);
+	amount = amount + (8 * (12 - bedtime));
+    amount = amount + (16 * endtime[0]);
+}
+
+document.getElementById('amount').innerHTML = "Amount Due: $" + amount;
+
+}
+
+function ClearError() {
+document.getElementById('errormsg').innerHTML ='';
+document.getElementById('amount').innerHTML ='';
+}
+</script>
+
+</body>
+</html> 
+
+
+
+
